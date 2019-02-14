@@ -4,7 +4,7 @@
 
 ![](https://user-images.githubusercontent.com/4027283/52775578-4ed2f880-3040-11e9-8161-b89c483e0d25.png)
 
-Using data comming from official RATP twitter accounts ([@Ligne1_RATP](https://twitter.com/Ligne1_RATP) for line 1 for example), we will see
+Using data coming from official RATP twitter accounts ([@Ligne1_RATP](https://twitter.com/Ligne1_RATP) for line 1 for example), we will see
 
 1. What is the probability of encountering some operational incidents on a particular line?
 2. Which lines are more likely to cause everybody unhappy?
