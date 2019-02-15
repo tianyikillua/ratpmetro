@@ -1,10 +1,10 @@
 # Statistical analysis of incident probability and causes on RATP metro lines
 
-*Trafic perturbé*...again?! This notebook provides a statistical point of view for all these daily incidents occurred on the Paris RATP metro lines.
+*Trafic perturbé*...again?! This [notebook ](https://github.com/tianyikillua/ratp-metro-incident/blob/master/ratp-metro-incident.ipynb) provides a statistical point of view for all these daily incidents occurred on the Paris RATP metro lines.
 
-![](https://user-images.githubusercontent.com/4027283/52775578-4ed2f880-3040-11e9-8161-b89c483e0d25.png)
+<img width="450" src="https://user-images.githubusercontent.com/4027283/52844997-46dd8c00-3106-11e9-8e6d-3f812c8140c3.png">
 
-Using data coming from official RATP twitter accounts ([@Ligne1_RATP](https://twitter.com/Ligne1_RATP) for line 1 for example), we will see
+Using tweets coming from official RATP Twitter accounts ([@Ligne1_RATP](https://twitter.com/Ligne1_RATP) for line 1 for example), we will see
 
 1. What is the probability of encountering some operational incidents on a particular line?
 2. Which lines are more likely to cause everybody unhappy?
@@ -21,19 +21,19 @@ The fist two examples below refer to the RATP metro line 2, which I take everyda
 
 In the figure below you can see the probability of catching an operational incident (*trafic perturbé*, *interrompu*...) at a given hour (in fact in the next following hour) and a specific weekday. The maximum value (nearly 9%) can be found on Wednesday at the evening rush hours.
 
-![](https://user-images.githubusercontent.com/4027283/52800924-17cf0800-307d-11e9-88bc-05fbf0b9a54c.png)
+<img width="500" src="https://user-images.githubusercontent.com/4027283/52820966-c55a0f80-30ad-11e9-867d-c927fb74ca37.png">
 
 #### It's us the main responsible for these incidents
 
 Nearly half (47%) of the incidents come from us. Also, 9% is due to unattended bags...
 
-![](https://user-images.githubusercontent.com/4027283/52801376-00444f00-307e-11e9-9c72-61a00d3c5aed.png)
+<img width="450" src="https://user-images.githubusercontent.com/4027283/52821080-166a0380-30ae-11e9-8244-ad7e087cff89.png">
 
 #### Line 13 should be jealous of line 4
 
 Every Parisian knows that the line 13 is bad. But in the year 2018 it was beaten by the line 4, which records an average probability of incidents larger than 4%.
 
-![](https://user-images.githubusercontent.com/4027283/52801476-35e93800-307e-11e9-82f9-a3a84ea7f9ee.png)
+<img width="500" src="https://user-images.githubusercontent.com/4027283/52821104-2681e300-30ae-11e9-8ef3-7cb166656605.png">
 
 ### License
 
