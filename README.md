@@ -25,7 +25,7 @@ In the figure below you can see the probability of catching an operational incid
 
 #### It's us the main responsible for these incidents
 
-Nearly half (47%) of the incidents come from us. Also, 9% is due to unattended bags...
+Nearly half (48%) of the incidents come from us. Also, 9% is due to unattended bags...
 
 <img width="450" src="https://user-images.githubusercontent.com/4027283/52821080-166a0380-30ae-11e9-8244-ad7e087cff89.png">
 
