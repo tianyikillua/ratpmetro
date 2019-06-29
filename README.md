@@ -1,6 +1,6 @@
 # Statistical analysis of incident probability and causes on RATP metro lines
 
-*Trafic perturbé*...again?! This [notebook ](https://github.com/tianyikillua/ratp-metro-incident/blob/master/ratp-metro-incident.ipynb) provides a statistical point of view for all these daily incidents occurred on the Paris RATP metro lines.
+*Trafic perturbé*...again?! This library and this [notebook ](https://github.com/tianyikillua/ratpmetro/blob/master/examples/notebook.ipynb) provides a statistical point of view for all these daily incidents occurred on the Paris RATP metro lines.
 
 <img width="450" src="https://user-images.githubusercontent.com/4027283/52844997-46dd8c00-3106-11e9-8e6d-3f812c8140c3.png">
 

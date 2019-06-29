@@ -1,4 +1,4 @@
-VERSION=$(shell python -c "import mpi2vtk; print(mpi2vtk.__version__)")
+VERSION=$(shell python -c "import ratpmetro; print(ratpmetro.__version__)")
 
 default:
 	@echo "\"make publish\"?"
