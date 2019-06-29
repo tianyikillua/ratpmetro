@@ -32,7 +32,7 @@ setup(
         about["__license__"],
         about["__status__"],
         # See <https://pypi.org/classifiers/> for all classifiers.
-        "Operating System :: Microsoft :: Windows",
+        "Operating System :: OS Independent",
         "Programming Language :: Python :: 3",
     ],
 )
