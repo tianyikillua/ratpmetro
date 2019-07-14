@@ -52,7 +52,7 @@ class RATPMetroTweetsAnalyzer:
         Some code is adapted from https://github.com/gitlaura/get_tweets
 
         Args:
-            line (int): RATP metro line number, between 1 and 14
+            line (int or str): RATP metro line number (1 to 14), or ``"A"``, ``"B"`` for RER lines
             number_of_tweets (int): Number of tweets to download, must be smaller than 3200 due to some limitation of the Twitter API
             folder_tweets (str): Folder to store the downloaded tweets as a ``.csv`` file
             force_download (bool): If ``False``, it will directly load the already downloaded file without re-downloading it. You can force downloading by using ``force_download = True``
@@ -82,6 +82,7 @@ class RATPMetroTweetsAnalyzer:
                 writer.writerows(tweets_for_csv)
 
         self.df = pd.read_csv(outfile)
+        self.line = line
         self.color = self._color_line(line)
 
     def process(self):
@@ -104,46 +105,49 @@ class RATPMetroTweetsAnalyzer:
 
         # Uniformly resample timestamps every hour and extract time information
         self.df_processed = self.df.drop(["tweet"], axis=1)
-        self.df_processed = self.df_processed.resample("H").agg(
+        self.df_processed = self.df_processed.resample("30min").agg(
             {"is_incident": np.any, "incident_cause": self._agg_incident_cause}
         )
         for x in ["year", "month", "day", "weekday", "hour"]:
             self.df_processed[x] = eval(f"self.df_processed.index.{x}")
 
-    def mean_incident_prob(self, year=None):
+    def incident_prob(self, year=None, loc=None):
         """
         Return the mean probability of incidents
 
         Args:
             year (int): If ``year`` is given then only tweets within this specific year are used, else then all downloaded tweets are used
+            loc (list of str): Time period from ``loc[0]`` to ``loc[1]``
         """
-        df = self._df_processed_loc_year(year)
+        df = self._df_processed_loc(year=year, loc=loc)
         return df["is_incident"].mean()
 
-    def plot_cause(self, year=None):
+    def plot_incident_cause(self, year=None, loc=None):
         """
         Plot frequencies of the main cause of incidents
 
         Args:
             year (int): If ``year`` is given then only tweets within this specific year are used, else then all downloaded tweets are used
+            loc (list of str): Time period from ``loc[0]`` to ``loc[1]``
         """
-        df = self._df_processed_loc_year(year)
+        df = self._df_processed_loc(year=year, loc=loc)
         incident_cause = df["incident_cause"].value_counts().drop(["N/A"])
         incident_cause.plot(kind="pie", autopct="%.0f%%")
         plt.ylabel("")
         return incident_cause.index, incident_cause.values
 
-    def plot_prob(self, by="hour", year=None, **kwargs):
+    def plot_incident_prob(self, by="hour", year=None, loc=None, **kwargs):
         """
         Plot (marginal) probability of operational incidents
 
         Args:
             by (str): Can be "year", "month", "day", "weekday", "hour", or any two of them connected by a "-", like "hour-weekday"
             year (int): If ``year`` is given then only tweets within this specific year are used, else then all downloaded tweets are used
+            loc (list of str): Time period from ``loc[0]`` to ``loc[1]``
         """
         if "year" in by:
             year = None
-        df = self._df_processed_loc_year(year)
+        df = self._df_processed_loc(year=year, loc=loc)
 
         # Extract "by" for 2d plots
         if "-" in by:
@@ -219,7 +223,6 @@ class RATPMetroTweetsAnalyzer:
         """
         Return the official RATP twitter account
         """
-
         # Metro
         try:
             line_int = int(line)
@@ -235,14 +238,14 @@ class RATPMetroTweetsAnalyzer:
                 print('line must be a number between 1 and 14, "A", or "B".')
                 return None
 
-    def _classify_incident_cause(self, cause):
+    def _classify_incident_cause(self, tweet):
         """
         Classify the cause of operational incident
         """
-        cause = cause.lower().strip()
+        tweet = tweet.lower().strip()
         for main_cause, keywords in self.incident_causes.items():
             for keyword in keywords:
-                if keyword in cause:
+                if keyword in tweet:
                     return main_cause
         else:
             return self.incident_cause_other
@@ -258,17 +261,19 @@ class RATPMetroTweetsAnalyzer:
         else:
             return "N/A"
 
-    def _df_processed_loc_year(self, year=None):
+    def _df_processed_loc(self, year=None, loc=None):
         """
-        Return self.df_processed within the given year
+        Return self.df_processed within the given year or time period
         """
         assert self.df is not None
         if self.df_processed is None:
             self.process()
 
-        # Focus on a specific year
+        # Focus on a specific year or time period
         if year is not None:
             df = self.df_processed.loc[f"{year}-01-01":f"{year}-12-31"]
+        elif loc is not None:
+            df = self.df_processed.loc[loc[0]:loc[1]]
         else:
             df = self.df_processed
         return df
@@ -278,41 +283,22 @@ class RATPMetroTweetsAnalyzer:
         Read a tweet message from the RATP official accounts and detect if it announces
         some operational incidents
 
-        1. All tweets concerning operational states
-           (*perturbé*, *repart*, *rétabli*, *interrompu*, ...)
-           are assumed to ALWAYS start with the current time (10:21 for instance).
-        2. The cause (*colis suspect* for example) is contained within the last parentheses.
-        3. Only consider tweets from the current line (sometimes they retweet messages
-           from other lines...)
-
-        TODO: the tweet time (in self.df.index) and the time reported for the incident
-              in general do not match (but differ not much...
-              depending on the reactivity of RATP?). Ideally we should replace the tweet
-              time by the reported time to accurately locate the incident.
-
-        return (is_incident, incident_cause)
+        Returns:
+            bool: Whether the tweet corresponds to an incident
+            str: Cause of the incident if applicable, otherwise returns ``N/A``
         """
         if tweet.startswith("RT"):
             return pd.Series(
                 [False, "N/A"]
             )  # no incident identified, cause not available
-
         tweet = tweet.lower()
-        part_before_first_comma = tweet.partition(",")[0]
-        try:
-            time = pd.to_datetime(part_before_first_comma, format="%H:%M")
-            for word in self.incident_words:
-                if word in tweet:
-                    break
-            else:
-                return pd.Series([False, "N/A"])
-            cause = tweet.rpartition("(")[2]
-            if cause == "":
-                cause = "N/F"  # not found
-            else:
-                cause = self._classify_incident_cause(cause)
-            return pd.Series([True, cause])
-        except ValueError:
+
+        for word in self.incident_words:
+            negative_word = "n'est pas " +  word
+            if word in tweet and negative_word not in tweet:
+                cause = self._classify_incident_cause(tweet)
+                return pd.Series([True, cause])
+        else:
             return pd.Series([False, "N/A"])
 
     def _define_incidents(self):
@@ -339,6 +325,7 @@ class RATPMetroTweetsAnalyzer:
                 "fumée",
                 "rail",
                 "aiguillage",
+                "matériel",
             ],
             "voyageur": [
                 "voyageur",
