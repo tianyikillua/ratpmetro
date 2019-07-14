@@ -1,10 +1,14 @@
-# Statistical analysis of incident probability and causes on RATP metro lines
+# Statistical analysis of incident probability and causes on RATP metro/RER lines
 
-*Trafic perturbé*...again?! This library and this [notebook ](https://github.com/tianyikillua/ratpmetro/blob/master/examples/notebook.ipynb) provides a statistical point of view for all these daily incidents occurred on the Paris RATP metro lines.
+[![travis](https://img.shields.io/travis/tianyikillua/ratpmetro.svg?style=flat-square)](https://travis-ci.org/tianyikillua/ratpmetro)
+[![readthedocs](https://readthedocs.org/projects/ratpmetro/badge/?version=latest&style=flat-square)](https://readthedocs.org/projects/ratpmetro/?badge=latest)
+[![pypi](https://img.shields.io/pypi/v/ratpmetro.svg?style=flat-square)](https://pypi.org/project/ratpmetro)
+
+*Trafic perturbé*...again?! This library permits statistical analyses of all these daily incidents occurred on the Paris RATP metro/RER lines.
 
 <img width="450" src="https://user-images.githubusercontent.com/4027283/52844997-46dd8c00-3106-11e9-8e6d-3f812c8140c3.png">
 
-Using tweets coming from official RATP Twitter accounts ([@Ligne1_RATP](https://twitter.com/Ligne1_RATP) for line 1 for example), we will see
+Using tweets coming from official RATP Twitter accounts ([@Ligne1_RATP](https://twitter.com/Ligne1_RATP) for line 1 for example), we can see
 
 1. What is the probability of encountering some operational incidents on a particular line?
 2. Which lines are more likely to cause everybody unhappy?
@@ -13,27 +17,16 @@ Using tweets coming from official RATP Twitter accounts ([@Ligne1_RATP](https://
 5. Are there less problems during weekends?
 6. Instead of going on vacation, is there any reason to be happy if I still work in August?
 
-### Some examples in the year 2018
+Some responses to these questions can be found in this [notebook ](https://github.com/tianyikillua/ratpmetro/blob/master/examples/notebook.ipynb)
 
-The fist two examples below refer to the RATP metro line 2, which I take everyday for work.
+Documentation is available [here](https://ratpmetro.readthedocs.io).
 
-#### I should leave work before 17:00 on Wednesday (or after 21:00)
+### Installation
 
-In the figure below you can see the probability of catching an operational incident (*trafic perturbé*, *interrompu*...) at a given hour (in fact in the next following hour) and a specific weekday. The maximum value (nearly 9%) can be found on Wednesday at the evening rush hours.
-
-<img width="500" src="https://user-images.githubusercontent.com/4027283/52820966-c55a0f80-30ad-11e9-867d-c927fb74ca37.png">
-
-#### It's us the main responsible for these incidents
-
-Nearly half (48%) of the incidents come from us. Also, 9% is due to unattended bags...
-
-<img width="450" src="https://user-images.githubusercontent.com/4027283/52821080-166a0380-30ae-11e9-8244-ad7e087cff89.png">
-
-#### Line 13 should be jealous of line 4
-
-Every Parisian knows that the line 13 is bad. But in the year 2018 it was beaten by the line 4, which records an average probability of incidents larger than 4%.
-
-<img width="500" src="https://user-images.githubusercontent.com/4027283/52821104-2681e300-30ae-11e9-8ef3-7cb166656605.png">
+To install `ratpmetro`, you are invited to use `pip` and its associated options
+```
+pip install -U ratpmetro
+```
 
 ### License
 
