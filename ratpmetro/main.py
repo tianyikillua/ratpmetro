@@ -14,7 +14,6 @@ params = {
     "ytick.labelsize": 14,
     "legend.fontsize": 14,
     "savefig.bbox": "tight",
-    "savefig.pad_inches": 0.01,
 }
 plt.rcParams.update(params)
 
@@ -66,7 +65,9 @@ class RATPMetroTweetsAnalyzer:
             import csv
             import tweepy
 
-            auth = tweepy.OAuthHandler(self.api["consumer_key"], self.api["consumer_secret"])
+            auth = tweepy.OAuthHandler(
+                self.api["consumer_key"], self.api["consumer_secret"]
+            )
             auth.set_access_token(self.api["access_key"], self.api["access_secret"])
             api = tweepy.API(auth, wait_on_rate_limit=True)
 
@@ -94,7 +95,6 @@ class RATPMetroTweetsAnalyzer:
         # Convert to Paris time
         self.df["time"] = pd.DatetimeIndex(pd.to_datetime(self.df["time"]))
         self.df = self.df.set_index("time")
-        self.df = self.df.tz_localize("UTC")
         self.df = self.df.tz_convert("Europe/Paris")
         self.df = self.df.sort_index()
 
@@ -273,7 +273,7 @@ class RATPMetroTweetsAnalyzer:
         if year is not None:
             df = self.df_processed.loc[f"{year}-01-01":f"{year}-12-31"]
         elif loc is not None:
-            df = self.df_processed.loc[loc[0]:loc[1]]
+            df = self.df_processed.loc[loc[0] : loc[1]]
         else:
             df = self.df_processed
         return df
@@ -294,7 +294,7 @@ class RATPMetroTweetsAnalyzer:
         tweet = tweet.lower()
 
         for word in self.incident_words:
-            negative_word = "n'est pas " +  word
+            negative_word = "n'est pas " + word
             if word in tweet and negative_word not in tweet:
                 cause = self._classify_incident_cause(tweet)
                 return pd.Series([True, cause])
